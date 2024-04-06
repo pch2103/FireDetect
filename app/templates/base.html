@@ -1,22 +1,24 @@
 <html>
-  <head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{url_for('static',filename='css/tailwind.css')}}" rel="stylesheet">
     {% if title %}
     <title>{{ title }} - Flask</title>
     {% else %}
     <title>Flask</title>
     {% endif %}
-  </head>
-  <body>
-    <div>
-      Flask test:
-    </div>
-    <hr />
+</head>
+<body>
+<div class="flex items-center justify-center min-h-screen from-indigo-100 via-indigo-200 to-indigo-400 bg-gradient-to-br">
     {% with messages = get_flashed_messages() %} {% if messages %}
     <ul>
-      {% for message in messages %}
-      <li>{{ message }}</li>
-      {% endfor %}
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
     </ul>
-    {% endif %} {% endwith %} {% block content %}{% endblock %}
-  </body>
+    {% endif %} {% endwith %}
+    {% block content %}{% endblock %}
+</div>
+</body>
 </html>

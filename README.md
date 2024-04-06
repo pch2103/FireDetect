@@ -1,2 +1,1 @@
-# FireDetect
-Diplom
+# py-flask
