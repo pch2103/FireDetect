@@ -7,7 +7,8 @@
             {{ form.hidden_tag() }}
             <div class="mb-4">
                 {{ form.serverip.label(class_="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2")}}
-                {{ form.serverip(class_="disable-on-loading shadow-sm rounded-md w-full px-3 py-2 border border-gray-300 focus:outline-none
+                {{ form.serverip(class_="disable-on-loading shadow-sm rounded-md w-full px-3 py-2 border border-gray-300
+                focus:outline-none
                 focus:ring-indigo-500 focus:border-indigo-500") }}
 
                 {% for error in form.serverip.errors %}
@@ -48,8 +49,17 @@
             focus:ring-offset-2 focus:ring-indigo-500") }}
         </div>
     </form>
+    {% if not loaded %}
     <div class="flex flex-row justify-center items-center">
         <div id="loading" class="loader"></div>
     </div>
+    {% if result %}
+    <div class="bg-red-100 border-t border-b border-red-500 text-red-700 px-4 py-3" role="alert">
+        <p class="font-bold">Informational message</p>
+        <p class="text-sm">{{ result }}</p>
+    </div>
+    {% endif %}
+    {% endif %}
+
 </div>
 {% endblock %}

@@ -2,6 +2,7 @@ import json
 import requests
 from app import app
 
+
 def getAxxonCameraList(url):
     loaded = False
     r = requests.get(url)
@@ -12,5 +13,5 @@ def getAxxonCameraList(url):
     for r in rj['cameras']:
         item = {r['displayName']: r['accessPoint']}
         response.append(item)
-        if response.count !=0: loaded=True
+        if response.count != 0: loaded = True
     return response, loaded
