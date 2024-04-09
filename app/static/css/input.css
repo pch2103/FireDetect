@@ -1,3 +1,22 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  .dark-mode-disabled {
+    @apply bg-white;
+  }
+}
+
+@layer components {
+  .dark-mode-disabled {
+    @apply text-gray-900;
+  }
+}
+
+@layer utilities {
+  .dark-mode-disabled {
+    --tw-bg-opacity: 1;
+    --tw-text-opacity: 1;
+  }
+}

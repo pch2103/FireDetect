@@ -1,41 +1,55 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="bg-white dark:bg-gray-900 shadow-md rounded-lg px-8 py-6 max-w-md">
-        <h1 class="text-2xl font-bold text-center mb-4 dark:text-gray-200">Виртуальные камеры</h1>
-        <form action="#">
+<div class="min-w-[480px] bg-white dark:bg-gray-900 shadow-md rounded-lg px-8 py-6 max-w-md">
+    <h1 class="text-2xl font-bold text-center mb-4 dark:text-gray-200">Подключение к Axxon Next</h1>
+    <form action="" method="post" novalidate>
+        <div>
+            {{ form.hidden_tag() }}
             <div class="mb-4">
-                <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email
-                    Address</label>
-                <input type="email" id="email"
-                       class="shadow-sm rounded-md w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                       placeholder="your@email.com" required>
+                {{ form.serverip.label(class_="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2")}}
+                {{ form.serverip(class_="disable-on-loading shadow-sm rounded-md w-full px-3 py-2 border border-gray-300 focus:outline-none
+                focus:ring-indigo-500 focus:border-indigo-500") }}
+
+                {% for error in form.serverip.errors %}
+                <span class="block mt-2 text-sm text-red-500 ">[{{ error }}]</span>
+                {% endfor %}
+
             </div>
             <div class="mb-4">
-                <label for="password"
-                       class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Password</label>
-                <input type="password" id="password"
-                       class="shadow-sm rounded-md w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                       placeholder="Enter your password" required>
-                <a href="#"
-                   class="text-xs text-gray-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Forgot
-                    Password?</a>
+                {{ form.username.label(class_="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2")}}
+                {{ form.username(class_="shadow-sm rounded-md w-full px-3 py-2 border border-gray-300 focus:outline-none
+                focus:ring-indigo-500 focus:border-indigo-500") }}
+
+                {% for error in form.username.errors %}
+                <span class="mt-2 text-sm text-red-500 ">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+            <div class="mb-4">
+                {{ form.password.label(class_="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2")}}
+                {{ form.password(class_="shadow-sm rounded-md w-full px-3 py-2 border border-gray-300 focus:outline-none
+                focus:ring-indigo-500 focus:border-indigo-500") }}
+
+                {% for error in form.password.errors %}
+                <span class="mt-2 text-sm text-red-500">[{{ error }}]</span>
+                {% endfor %}
+
             </div>
             <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center">
-                    <input type="checkbox" id="remember"
-                           class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 focus:outline-none"
-                           checked>
-                    <label for="remember" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">Remember
-                        me</label>
+                    {{ form.remember_me(class_="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500
+                    focus:outline-none") }}
+                    {{ form.remember_me.label(class_="ml-2 block text-sm text-gray-700 dark:text-gray-300") }}
                 </div>
-                <a href="#"
-                   class="text-xs text-indigo-500 hover:text-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Create
-                    Account</a>
             </div>
-            <button onclick="alert(" hello
-            ")" type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm
+            {{ form.login_submit(class_="disable-on-loading w-full flex justify-center py-2 px-4 border
+            border-transparent rounded-md
+            shadow-sm
             text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2
-            focus:ring-offset-2 focus:ring-indigo-500">Login</button>
-        </form>
+            focus:ring-offset-2 focus:ring-indigo-500") }}
+        </div>
+    </form>
+    <div class="flex flex-row justify-center items-center">
+        <div id="loading" class="loader"></div>
     </div>
+</div>
 {% endblock %}

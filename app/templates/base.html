@@ -3,6 +3,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="{{url_for('static',filename='css/tailwind.css')}}" rel="stylesheet">
+    <link
+            rel="stylesheet"
+            type="text/css"
+            href="{{ url_for('static',filename='css/loading.css') }}"
+    />
+    <script type="text/javascript">
+        // <![CDATA[
+                  function loadingContent(){
+                    document.getElementById("loading").style.display = "block";
+                    el = document.getElementsByClassName('disable-on-loading');
+
+                    for (var i = 0; i < el.length; i ++) {
+                      el[i].classList.add("disabled")
+                    }
+                  }//preloader
+          // ]]>
+    </script>
     {% if title %}
     <title>{{ title }} - Flask</title>
     {% else %}
@@ -10,14 +27,15 @@
     {% endif %}
 </head>
 <body>
+{% with messages = get_flashed_messages() %} {% if messages %}
+<ul>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %} {% endwith %}
+
 <div class="flex items-center justify-center min-h-screen from-indigo-100 via-indigo-200 to-indigo-400 bg-gradient-to-br">
-    {% with messages = get_flashed_messages() %} {% if messages %}
-    <ul>
-        {% for message in messages %}
-        <li>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %} {% endwith %}
     {% block content %}{% endblock %}
 </div>
 </body>
