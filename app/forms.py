@@ -26,6 +26,6 @@ class AxxonServerLoginForm(FlaskForm):
                            validators=[DataRequired()])
     password = StringField('Пароль', render_kw={"placeholder": "Введите пароль"}, validators=[DataRequired()],
                             widget=PasswordInput(hide_value=False))
-    #password = PasswordField('Пароль', render_kw={"placeholder": "Введите пароль"}, validators=[DataRequired()])
-    remember_me = BooleanField('Запомнить параметры для текущей сессии', render_kw={"checked": True})
+    # password = PasswordField('Пароль', render_kw={"placeholder": "Введите пароль"}, validators=[DataRequired()])
+    remember_me = BooleanField('Запомнить параметры для текущей сессии', render_kw={"checked": False})
     login_submit = SubmitField('Подключиться к серверу', render_kw={"onclick": "loadingContent()"})
