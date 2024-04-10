@@ -58,14 +58,18 @@ def index():
 
     return render_template('index.html', title='Home', form=form, result=data.result, load=data.load)
 
+
 @app.route("/video_feed")
 def video_feed():
     res = detect_video(data.camera)
     return Response(res, mimetype='multipart/x-mixed-replace; boundary=frame')
 
+
 @app.route('/virtual_cameras', methods=['GET', 'POST'])
 def virtual_cameras():
-    result = session.get('result')
+    if 'result' in session:
+        result = session.get('result')
+    header = ''
     play_video = False
     form = AxxonServerGetCamerasForm()
 
@@ -90,4 +94,4 @@ def virtual_cameras():
         play_video = True
 
     return render_template('virtual_cameras.html', title='Виртуальные камеры',
-                           play_video=play_video, plamessage=data.camera, form=form)
+                           header=header, play_video=play_video, plamessage=data.camera, form=form)
