@@ -2,8 +2,38 @@
 {% block content %}
 <div class="min-w-[480px] bg-white dark:bg-gray-900 shadow-md rounded-lg px-8 py-6 max-w-md">
     <h1 class="text-2xl font-bold text-center mb-4 dark:text-gray-200">Виртуальные камеры</h1>
-    <form action="" method="post" novalidate>
-        {{ form.hidden_tag() }}
-    </form>
+    <div>
+        <form action="" method="post" novalidate>
+            {{ form.hidden_tag() }}
+            <div class="mb-4">
+                {{ form.cameras.label(class_="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2")}}
+                {{ form.cameras(class_="disable-on-loading shadow-sm rounded-md w-full px-3 py-2 border border-gray-300
+                focus:outline-none
+                focus:ring-indigo-500 focus:border-indigo-500") }}
+            </div>
+            {{ form.cameras_submit(class_="disable-on-loading w-full flex justify-center py-2 px-4 border
+            border-transparent rounded-md
+            shadow-sm
+            text-sm font-medium text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2
+            focus:ring-offset-2 focus:ring-indigo-500") }}
+        </form>
+        <div class="flex flex-row justify-center items-center">
+            <div id="loading" class="loader"></div>
+        </div>
+        {% if message %}
+        <div class="bg-red-100 border-t border-b border-red-500 text-red-700 px-4 py-3" role="alert">
+            <p class="font-bold">Informational message</p>
+            <p class="text-sm">{{ message }}</p>
+        </div>
+        {% endif %}
+    </div>
+    {% if play_video %}
+    <h1>{{ header }}</h1>
+
+    <div>
+        <img id="bg" width=640 src="{{ url_for('video_feed') }}">
+    </div>
+
+    {% endif %}
 </div>
 {% endblock %}

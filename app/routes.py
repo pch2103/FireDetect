@@ -1,7 +1,11 @@
-from flask import render_template, session, redirect, flash, url_for
+from time import sleep
+
+from flask import render_template, Response, session, redirect, flash, url_for
 from app.get_axxon import getAxxonCameraList
-from app.forms import AxxonServerLoginForm, DataStore
+from app.get_video import detect_video
+from app.forms import AxxonServerLoginForm, AxxonServerGetCamerasForm, DataStore
 from app import app
+import re
 
 data = DataStore()
 
@@ -26,8 +30,9 @@ def index():
 
     if form.validate_on_submit():
 
-        data.url = 'http://' + form.username.data + ':' + form.password.data + '@' + form.serverip.data + ':8000/camera/list'
-        data.result, data.load = getAxxonCameraList(data.url)
+        data.url = ('http://' + form.username.data + ':' + form.password.data + '@' + form.serverip.data + ':'
+                    + app.config['NEXT_PORT'])
+        data.result, data.load = getAxxonCameraList(data.url + '/camera/list')
 
         session['remember_me'] = form.remember_me.data
         flash('data.load {} - {}'.format(data.load, session['remember_me']))
@@ -41,6 +46,7 @@ def index():
             else:
                 if 'password' in session:
                     session.pop('password')
+            return redirect(url_for('virtual_cameras'))
         else:
             if data.result:
                 # Error in request
@@ -52,7 +58,37 @@ def index():
     return render_template('index.html', title='Home', form=form, result=data.result, load=data.load)
 
 
+@app.route("/video_feed")
+def video_feed():
+
+    return Response(data.res , mimetype='multipart/x-mixed-replace; boundary=frame')
+
 @app.route('/virtual_cameras', methods=['GET', 'POST'])
-def virtual_cam():
-    form = AxxonServerLoginForm()
-    return render_template('virtual_cameras.html', title='Home', form=form)
+def virtual_cameras():
+    play_video = False
+    form = AxxonServerGetCamerasForm()
+
+    choices = []
+    for item in data.result:
+        for key in item:
+            choices.append(key)
+    form.cameras.choices = choices
+
+    if form.validate_on_submit():
+        play_video = False
+        vl = None
+        for item in data.result:
+            for key in item:
+                if key == form.cameras.data:
+                    vl = item[key]
+                    header = key
+                    break
+
+        data.camera = (data.url + '/live/media/' + re.sub("^hosts/", "", vl))
+
+        data.res = detect_video(data.camera)
+        if data.res is not None:
+            play_video = True
+
+    return render_template('virtual_cameras.html', title='Виртуальные камеры',
+                           play_video=play_video, plamessage=data.camera, form=form)

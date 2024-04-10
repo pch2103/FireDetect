@@ -18,7 +18,11 @@
                     for (var i = 0; i < el.length; i ++) {
                       el[i].classList.add("disabled")
                     }
-                  }//preloader
+                  }
+
+                  function loadingVideo(){
+                    document.getElementById("loading").style.display = "block";
+                  }
           // ]]>
     </script>
     {% if title %}
