@@ -30,9 +30,9 @@ def index():
 
     if form.validate_on_submit():
 
-        data.url = ('http://' + form.username.data + ':' + form.password.data + '@' + form.serverip.data + ':'
+        session['url'] = ('http://' + form.username.data + ':' + form.password.data + '@' + form.serverip.data + ':'
                     + app.config['NEXT_PORT'])
-        data.result, data.load = getAxxonCameraList(data.url + '/camera/list')
+        data.result, data.load = getAxxonCameraList(session['url'] + '/camera/list')
 
         session['remember_me'] = form.remember_me.data
         flash('data.load {} - {}'.format(data.load, session['remember_me']))
@@ -61,8 +61,12 @@ def index():
 
 @app.route("/video_feed")
 def video_feed():
-    res = detect_video(data.camera)
-    return Response(res, mimetype='multipart/x-mixed-replace; boundary=frame')
+    if 'camera' in session:
+        camera = session['camera']
+        flash('STREAM {}'.format(camera))
+        res = detect_video(camera)
+        return Response(res, mimetype='multipart/x-mixed-replace; boundary=frame')
+    return redirect(url_for('virtual_cameras'))
 
 
 @app.route('/virtual_cameras', methods=['GET', 'POST'])
@@ -89,7 +93,7 @@ def virtual_cameras():
                     header = key
                     break
 
-        data.camera = (data.url + '/live/media/' + re.sub("^hosts/", "", vl))
+        session['camera'] = (session['url'] + '/live/media/' + re.sub("^hosts/", "", vl))
 
         play_video = True
 
