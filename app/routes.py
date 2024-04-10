@@ -1,6 +1,6 @@
 from time import sleep
 
-from flask import render_template, Response, session, redirect, flash, url_for
+from flask import render_template, Response, session, redirect, flash, url_for, request
 from app.get_axxon import getAxxonCameraList
 from app.get_video import detect_video
 from app.forms import AxxonServerLoginForm, AxxonServerGetCamerasForm, DataStore
@@ -46,6 +46,7 @@ def index():
             else:
                 if 'password' in session:
                     session.pop('password')
+            session['result'] = data.result
             return redirect(url_for('virtual_cameras'))
         else:
             if data.result:
@@ -57,19 +58,19 @@ def index():
 
     return render_template('index.html', title='Home', form=form, result=data.result, load=data.load)
 
-
 @app.route("/video_feed")
 def video_feed():
-
-    return Response(data.res , mimetype='multipart/x-mixed-replace; boundary=frame')
+    res = detect_video(data.camera)
+    return Response(res, mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/virtual_cameras', methods=['GET', 'POST'])
 def virtual_cameras():
+    result = session.get('result')
     play_video = False
     form = AxxonServerGetCamerasForm()
 
     choices = []
-    for item in data.result:
+    for item in result:
         for key in item:
             choices.append(key)
     form.cameras.choices = choices
@@ -86,9 +87,7 @@ def virtual_cameras():
 
         data.camera = (data.url + '/live/media/' + re.sub("^hosts/", "", vl))
 
-        data.res = detect_video(data.camera)
-        if data.res is not None:
-            play_video = True
+        play_video = True
 
     return render_template('virtual_cameras.html', title='Виртуальные камеры',
                            play_video=play_video, plamessage=data.camera, form=form)
