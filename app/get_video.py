@@ -1,6 +1,4 @@
-from flask import Flask, send_from_directory
 import os.path
-import logging
 import time
 from ultralytics import YOLO
 import cv2
@@ -72,15 +70,3 @@ def detect_video(url):
             #       b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
 
-def send_static(filename):
-    return send_from_directory('static', filename)
-    #    cv2.imshow('frame', frame)
-
-    #    if cv2.waitKey(1) & 0xFF == ord('q'):
-    #       break
-    #cap.release()
-    #cv2.destroyAllWindows()
-
-# Reading the classe
-
-# concat frame one by one and show result
