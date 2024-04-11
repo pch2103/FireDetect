@@ -63,8 +63,7 @@ def index():
 def video_feed():
     if 'camera' in session:
         camera = session['camera']
-        res = detect_video(camera)
-        return Response(res, mimetype='multipart/x-mixed-replace; boundary=frame')
+        return Response(get_video(camera), mimetype='multipart/x-mixed-replace; boundary=frame')
     return redirect(url_for('virtual_cameras'))
 
 
@@ -94,8 +93,8 @@ def virtual_cameras():
                     break
 
         session['camera'] = (session['url'] + '/live/media/' + re.sub("^hosts/", "", vl))
-        get_video(session['camera'])
-        # play_video = True
+
+        play_video = True
 
     return render_template('virtual_cameras.html', title='Виртуальные камеры',
                            header=header, play_video=play_video, form=form)

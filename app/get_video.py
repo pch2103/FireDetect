@@ -19,19 +19,13 @@ def get_video(url):
         if not success:
             break
         else:
-            # ret, buffer = cv2.imencode('.jpg', frame)
-            # frame = buffer.tobytes()
-            # concat frame one by one and show result
-            cv2.imshow('show', frame)
-            k = cv2.waitKey(1)
-            if k == ord('q'):
-                break
+            ret, buffer = cv2.imencode('.jpg', frame)
+            frame = buffer.tobytes()
 
-            # yield (b'--frame\r\n'
-            #       b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-            # elapsed_time = time.time() - start_time
-            # logging.debug(f"Frame generation time: {elapsed_time} seconds")
-    cv2.destroyAllWindows()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n'
+                   b'\r\n' + frame + b'\r\n')
+            time.sleep(0.04)
 
 
 def detect_video(url):
@@ -49,7 +43,6 @@ def detect_video(url):
         else:
             frame = cv2.resize(frame, (640, 480))
             results = model(frame, stream=True)
-            time.sleep(2)
             for r in results:
                 boxes = r.boxes
                 for box in boxes:
@@ -71,7 +64,11 @@ def detect_video(url):
             frame = buffer.tobytes()
 
             yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+                   b'Content-Type: image/jpeg\r\n'
+                   b'\r\n' + frame + b'\r\n')
+            time.sleep(0.04)
+            # yield (b'--frame\r\n'
+            #       b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
 
 def send_static(filename):
