@@ -27,6 +27,10 @@ def get_video(url):
 
 def detect_video(url):
     model_path = os.path.join(os.path.dirname(__file__), 'static\\best.pt')
+
+    if not os.path.exists(model_path):
+        return "Model not found"
+
     model = YOLO(model_path)
 
     cap = cv2.VideoCapture(url)
@@ -67,5 +71,3 @@ def detect_video(url):
 
             # yield (b'--frame\r\n'
             #       b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-
-
