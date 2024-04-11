@@ -10,6 +10,7 @@ from app import app
 
 
 def get_video(url):
+    url = 'http://root:RmskBd9922@5.228.66.147:8000/live/media/DESKTOP-6KKNVN4/DeviceIpint.2/SourceEndpoint.video:0:0'
     camera = cv2.VideoCapture(url)
 
     while True:
@@ -18,13 +19,19 @@ def get_video(url):
         if not success:
             break
         else:
-            ret, buffer = cv2.imencode('.jpg', frame)
-            frame = buffer.tobytes()
+            # ret, buffer = cv2.imencode('.jpg', frame)
+            # frame = buffer.tobytes()
             # concat frame one by one and show result
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-            elapsed_time = time.time() - start_time
-            logging.debug(f"Frame generation time: {elapsed_time} seconds")
+            cv2.imshow('show', frame)
+            k = cv2.waitKey(1)
+            if k == ord('q'):
+                break
+
+            # yield (b'--frame\r\n'
+            #       b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+            # elapsed_time = time.time() - start_time
+            # logging.debug(f"Frame generation time: {elapsed_time} seconds")
+    cv2.destroyAllWindows()
 
 
 def detect_video(url):

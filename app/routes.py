@@ -2,7 +2,7 @@ from time import sleep
 
 from flask import render_template, Response, session, redirect, flash, url_for, request
 from app.get_axxon import getAxxonCameraList
-from app.get_video import detect_video
+from app.get_video import detect_video, get_video
 from app.forms import AxxonServerLoginForm, AxxonServerGetCamerasForm, DataStore
 from app import app
 import re
@@ -63,7 +63,6 @@ def index():
 def video_feed():
     if 'camera' in session:
         camera = session['camera']
-        flash('STREAM {}'.format(camera))
         res = detect_video(camera)
         return Response(res, mimetype='multipart/x-mixed-replace; boundary=frame')
     return redirect(url_for('virtual_cameras'))
@@ -95,8 +94,8 @@ def virtual_cameras():
                     break
 
         session['camera'] = (session['url'] + '/live/media/' + re.sub("^hosts/", "", vl))
-
-        play_video = True
+        get_video(session['camera'])
+        # play_video = True
 
     return render_template('virtual_cameras.html', title='Виртуальные камеры',
                            header=header, play_video=play_video, form=form)
