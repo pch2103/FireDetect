@@ -10,7 +10,7 @@ from app import app
 
 
 def get_video(url):
-    url = 'http://root:RmskBd9922@5.228.66.147:8000/live/media/DESKTOP-6KKNVN4/DeviceIpint.2/SourceEndpoint.video:0:0'
+    # url = 'http://root:RmskBd9922@5.228.66.147:8000/live/media/DESKTOP-6KKNVN4/DeviceIpint.2/SourceEndpoint.video:0:0'
     camera = cv2.VideoCapture(url)
 
     while True:
@@ -67,6 +67,7 @@ def detect_video(url):
                    b'Content-Type: image/jpeg\r\n'
                    b'\r\n' + frame + b'\r\n')
             time.sleep(0.04)
+
             # yield (b'--frame\r\n'
             #       b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
