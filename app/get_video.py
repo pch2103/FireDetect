@@ -35,8 +35,8 @@ def create_model():
 
 def detect_video(url):
 
-    model_path = os.path.join(os.path.dirname(__file__), 'static\\best.pt')
-
+    # model_path = os.path.join(os.path.dirname(__file__), 'static\\best.pt')
+    model_path = app.config['MODEL_PATH']
     if not os.path.exists(model_path):
         return None
 

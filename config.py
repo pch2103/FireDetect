@@ -9,3 +9,4 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'you-will-never-guess'
     NEXT_SERVER = os.environ.get('NEXT_SERVER') or 'localhost'
     NEXT_PORT = os.environ.get('NEXT_PORT') or 8000
+    MODEL_PATH = os.environ.get('MODEL_PATH') or None

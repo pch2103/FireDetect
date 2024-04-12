@@ -7,9 +7,6 @@ import re
 
 data = DataStore()
 
-add = 'http://root:RmskBd9922@DESKTOP-6KKNVN4:8000/camera/list?'
-
-
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():
@@ -93,8 +90,9 @@ def virtual_cameras():
                     break
 
         session['camera'] = (session['url'] + '/live/media/' + re.sub("^hosts/", "", vl))
-
         play_video = True
+        return render_template('virtual_cameras.html', title='Виртуальные камеры',
+                           header=header, play_video=play_video, form=form)
 
     return render_template('virtual_cameras.html', title='Виртуальные камеры',
                            header=header, play_video=play_video, form=form)
