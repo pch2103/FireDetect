@@ -12,6 +12,8 @@ class DataStore():
     selected = False
     camera = None
     res = None
+    model = None
+    capture = None
 
     def reset(self):
         self.result = []

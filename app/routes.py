@@ -1,6 +1,6 @@
 from flask import render_template, Response, session, redirect, flash, url_for, request
 from app.get_axxon import getAxxonCameraList
-from app.get_video import detect_video, get_video
+from app.get_video import detect_video, get_video, create_model
 from app.forms import AxxonServerLoginForm, AxxonServerGetCamerasForm, DataStore
 from app import app
 import re
@@ -14,6 +14,8 @@ add = 'http://root:RmskBd9922@DESKTOP-6KKNVN4:8000/camera/list?'
 @app.route('/index', methods=['GET', 'POST'])
 def index():
     form = AxxonServerLoginForm()
+    result = None
+    load = False
 
     if 'username' in session and not form.username.data:
         form.username.data = session.get('username')
@@ -28,14 +30,15 @@ def index():
 
     if form.validate_on_submit():
 
+
         session['url'] = ('http://' + form.username.data + ':' + form.password.data + '@' + form.serverip.data + ':'
-                    + app.config['NEXT_PORT'])
-        data.result, data.load = getAxxonCameraList(session['url'] + '/camera/list')
+                          + app.config['NEXT_PORT'])
+        result, load = getAxxonCameraList(session['url'] + '/camera/list')
 
         session['remember_me'] = form.remember_me.data
-        flash('data.load {} - {}'.format(data.load, session['remember_me']))
+        flash('data.load {} - {}'.format(load, session['remember_me']))
 
-        if data.load:
+        if load:
             # Success request
             if form.remember_me.data:
                 session['username'] = form.username.data
@@ -44,24 +47,23 @@ def index():
             else:
                 if 'password' in session:
                     session.pop('password')
-            session['result'] = data.result
+            session['result'] = result
             return redirect(url_for('virtual_cameras'))
         else:
-            if data.result:
+            if result:
                 # Error in request
                 if 'password' in session:
                     session.pop('password')
                 if 'username' in session:
                     session.pop('username')
 
-    return render_template('index.html', title='Home', form=form, result=data.result, load=data.load)
+    return render_template('index.html', title='Home', form=form, result=result, load=load)
 
 
 @app.route("/video_feed")
 def video_feed():
     if 'camera' in session:
-        camera = session['camera']
-        return Response(detect_video(camera), mimetype='multipart/x-mixed-replace; boundary=frame')
+        return Response(detect_video(session['camera']), mimetype='multipart/x-mixed-replace; boundary=frame')
     return redirect(url_for('virtual_cameras'))
 
 

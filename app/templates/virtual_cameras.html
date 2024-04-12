@@ -17,9 +17,6 @@
             text-sm font-medium text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2
             focus:ring-offset-2 focus:ring-indigo-500") }}
         </form>
-        <div class="flex flex-row justify-center items-center">
-            <div id="loading" class="loader"></div>
-        </div>
         {% if message %}
         <div class="bg-red-100 border-t border-b border-red-500 text-red-700 px-4 py-3" role="alert">
             <p class="font-bold">Informational message</p>
@@ -27,12 +24,17 @@
         </div>
         {% endif %}
     </div>
+
     {% if play_video %}
     <h2 class="text-2xl font-bold text-center mb-4 dark:text-gray-200">{{ header }}</h2>
+    <div class="flex flex-row justify-center items-center">
+        <div id="video-loading" class="loader"></div>
+    </div>
     <div>
-        <img id="bg" width=640 src="{{ url_for('video_feed') }}">
+        <img id="video_feed" onload="loaded()" width=640 src="{{ url_for('video_feed') }}">
     </div>
 
     {% endif %}
 </div>
+
 {% endblock %}

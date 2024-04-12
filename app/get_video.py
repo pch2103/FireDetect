@@ -25,20 +25,28 @@ def get_video(url):
             time.sleep(0.04)
 
 
+def create_model():
+    model_path = os.path.join(os.path.dirname(__file__), 'static\\best.pt')
+    if not os.path.exists(model_path):
+        return None
+    model = YOLO(model_path)
+    return model
+
+
 def detect_video(url):
+
     model_path = os.path.join(os.path.dirname(__file__), 'static\\best.pt')
 
     if not os.path.exists(model_path):
-        return "Model not found"
+        return None
 
     model = YOLO(model_path)
+    capture = cv2.VideoCapture(url)
 
-    cap = cv2.VideoCapture(url)
     classnames = ['fire']
 
     while True:
-        success, frame = cap.read()
-
+        success, frame = capture.read()
         if not success:
             break
         else:
