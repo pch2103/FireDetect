@@ -7,6 +7,7 @@ import re
 
 data = DataStore()
 
+
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():
@@ -21,19 +22,23 @@ def index():
     if 'serverip' in session and not form.serverip.data:
         form.serverip.data = session.get('serverip')
     else:
-        form.serverip.data = app.config['NEXT_SERVER']
+        if not form.serverip.data:
+            form.serverip.data = app.config['NEXT_SERVER']
 
     data.reset()
 
     if form.validate_on_submit():
 
-
         session['url'] = ('http://' + form.username.data + ':' + form.password.data + '@' + form.serverip.data + ':'
                           + app.config['NEXT_PORT'])
-        result, load = getAxxonCameraList(session['url'] + '/camera/list')
+        try:
+            result, load = getAxxonCameraList(session['url'] + '/camera/list')
+        except Exception as e:
+            result = "Server request error"
+            load = False
 
         session['remember_me'] = form.remember_me.data
-        flash('data.load {} - {}'.format(load, session['remember_me']))
+        # flash('data.load {} - {}'.format(load, session['url']))
 
         if load:
             # Success request
@@ -92,7 +97,7 @@ def virtual_cameras():
         session['camera'] = (session['url'] + '/live/media/' + re.sub("^hosts/", "", vl))
         play_video = True
         return render_template('virtual_cameras.html', title='Виртуальные камеры',
-                           header=header, play_video=play_video, form=form)
+                               header=header, play_video=play_video, form=form)
 
     return render_template('virtual_cameras.html', title='Виртуальные камеры',
                            header=header, play_video=play_video, form=form)
