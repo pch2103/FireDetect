@@ -8,7 +8,6 @@ from app import app
 
 
 def get_video(url):
-    # url = 'http://root:RmskBd9922@5.228.66.147:8000/live/media/DESKTOP-6KKNVN4/DeviceIpint.2/SourceEndpoint.video:0:0'
     camera = cv2.VideoCapture(url)
 
     while True:
@@ -23,14 +22,6 @@ def get_video(url):
                    b'Content-Type: image/jpeg\r\n'
                    b'\r\n' + frame + b'\r\n')
             time.sleep(0.04)
-
-
-def create_model():
-    model_path = os.path.join(os.path.dirname(__file__), 'static\\best.pt')
-    if not os.path.exists(model_path):
-        return None
-    model = YOLO(model_path)
-    return model
 
 
 def detect_video(url):

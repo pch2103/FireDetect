@@ -1,4 +1,5 @@
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField
 from wtforms import StringField, SelectField, PasswordField, BooleanField, SubmitField
 from wtforms.widgets import PasswordInput
 from wtforms.validators import DataRequired
@@ -38,3 +39,8 @@ class AxxonServerLoginForm(FlaskForm):
 class AxxonServerGetCamerasForm(FlaskForm):
     cameras = SelectField(u'Cameras:')
     cameras_submit = SubmitField('Применить детектор', render_kw={"onclick": "loadingVideo()"})
+
+
+class FileUploadForm(FlaskForm):
+    file = FileField('File')
+    file_submit = SubmitField('Загрузить файл', render_kw={"onclick": "loadingVideo()"})

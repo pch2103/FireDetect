@@ -1,7 +1,12 @@
-from flask import render_template, Response, session, redirect, flash, url_for, request
+import os
+import pathlib
+
+from flask import render_template, Response, session, redirect, flash, url_for, request, abort
+from werkzeug.utils import secure_filename
+
 from app.get_axxon import getAxxonCameraList
-from app.get_video import detect_video, get_video, create_model
-from app.forms import AxxonServerLoginForm, AxxonServerGetCamerasForm, DataStore
+from app.get_video import detect_video
+from app.forms import AxxonServerLoginForm, AxxonServerGetCamerasForm, FileUploadForm, DataStore
 from app import app
 import re
 
@@ -25,8 +30,6 @@ def index():
         if not form.serverip.data:
             form.serverip.data = app.config['NEXT_SERVER']
 
-    data.reset()
-
     if form.validate_on_submit():
 
         session['url'] = ('http://' + form.username.data + ':' + form.password.data + '@' + form.serverip.data + ':'
@@ -42,13 +45,9 @@ def index():
 
         if load:
             # Success request
-            if form.remember_me.data:
-                session['username'] = form.username.data
-                session['password'] = form.password.data
-                session['serverip'] = form.serverip.data
-            else:
-                if 'password' in session:
-                    session.pop('password')
+            session['username'] = form.username.data
+            session['password'] = form.password.data
+            session['serverip'] = form.serverip.data
             session['result'] = result
             return redirect(url_for('virtual_cameras'))
         else:
@@ -101,3 +100,55 @@ def virtual_cameras():
 
     return render_template('virtual_cameras.html', title='Виртуальные камеры',
                            header=header, play_video=play_video, form=form)
+
+
+@app.route('/upload_file')
+def file():
+    message = ''
+    header = ''
+
+    play_video = None
+
+    if 'camera' in session:
+        header = os.path.basename(session['camera']).split('/')[-1]
+
+    if 'message' in request.args:
+        message = request.args['message']
+
+    if 'play_video' in request.args:
+        play_video = request.args['play_video']
+
+    flash('Files3 - {}'.format(session['camera']))
+
+    return render_template('upload_file.html', title='Видео из файла', header=header,
+                           message=message, play_video=play_video)
+
+
+@app.route('/upload_file', methods=['POST'])
+def upload_file():
+    message = ''
+    play_video = False
+    uploaded_file = request.files['file']
+    upload_folder = os.path.join(os.path.dirname(__file__), 'static/' + app.config['UPLOAD_PATH'])
+    filename = secure_filename(uploaded_file.filename)
+
+    flash('Files1 - {}'.format(filename))
+    if filename != '':
+        try:
+            file_ext = os.path.splitext(filename)[1]
+            if file_ext not in app.config['UPLOAD_EXTENSIONS']:
+                return redirect(url_for('file', message='Не верный формат файла'))
+
+            # Upload new file to /upload
+            uploaded_file.save(os.path.join(upload_folder, filename))
+
+            session['camera'] = os.path.join(upload_folder, filename)
+            play_video = True
+        except Exception as e:
+            message = 'Ошибки при загрузки файла (' + str(e) + ')'
+    else:
+        message = 'Не выбран файл'
+
+    flash('Files2 - {}'.format(session['camera']))
+
+    return redirect(url_for('file', message=message, play_video=play_video))

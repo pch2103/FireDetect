@@ -1,8 +1,5 @@
 import requests
 import json
-from flask import flash
-from requests.exceptions import RequestException
-from app import app
 
 
 def getAxxonCameraList(url):

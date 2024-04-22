@@ -7,7 +7,7 @@
     <link
             rel="stylesheet"
             type="text/css"
-            href="{{ url_for('static',filename='css/loading.css') }}"
+            href="{{ url_for('static',filename='css/style.css') }}"
     />
     <script type="text/javascript">
         // <![CDATA[
@@ -45,7 +45,56 @@
 {% endif %} {% endwith %}
 
 <div class="flex items-center justify-center min-h-screen from-indigo-100 via-indigo-200 to-indigo-400 bg-gradient-to-br">
-    {% block content %}{% endblock %}
+    <div class="min-w-[480px] bg-white dark:bg-gray-900 shadow-md rounded-lg px-8 py-6 max-w-md">
+        <div class="mb-8 inline-flex items-center rounded-md shadow-sm">
+            <div onclick="location.href='{{ url_for('index') }}'">
+                <button id="index"
+                        class="nav-item text-slate-800 hover:text-blue-600 text-sm bg-white hover:bg-slate-100 border border-slate-200 rounded-l-lg font-medium px-4 py-2 inline-flex space-x-1 items-center">
+                <span>
+                    <svg id="video_call_black_24dp_1_" data-name="video_call_black_24dp (1)"
+                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path id="Path_201" data-name="Path 201" d="M0,0H24V24H0Z" fill="none"/>
+                        <path id="Path_202" data-name="Path 202"
+                              d="M17,10.5V7a1,1,0,0,0-1-1H4A1,1,0,0,0,3,7V17a1,1,0,0,0,1,1H16a1,1,0,0,0,1-1V13.5l4,4V6.5ZM15,16H5V8H15ZM9,15h2V13h2V11H11V9H9v2H7v2H9Z"/>
+                    </svg>
+                  </span>
+                    <span>Виртуальные камеры Axxon</span>
+                </button>
+            </div>
+            <div onclick="location.href='{{ url_for('upload_file') }}'">
+                <button id="file_upload"
+                        class="nav-item text-slate-800 hover:text-blue-600 text-sm bg-white hover:bg-slate-100 border border-slate-200 rounded-r-lg font-medium px-4 py-2 inline-flex space-x-1 items-center">
+                <span>
+                    <svg id="folder_open_black_24dp_1_" data-name="folder_open_black_24dp (1)"
+                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path id="Path_203" data-name="Path 203" d="M0,0H24V24H0Z" fill="none"/>
+                        <path id="Path_204" data-name="Path 204"
+                              d="M20,6H12L10,4H4A2,2,0,0,0,2.01,6L2,18a2.006,2.006,0,0,0,2,2H20a2.006,2.006,0,0,0,2-2V8A2.006,2.006,0,0,0,20,6Zm0,12H4V8H20Z"/>
+                    </svg>
+                  </span>
+                    <span>Видео из файла</span>
+                </button>
+            </div>
+            </a>
+        </div>
+        {% block content %}{% endblock %}
+    </div>
 </div>
 </body>
+<script>
+    window.onload = function () {
+        var currentLocation = window.location.pathname;
+        console.log("PATH!!!!", currentLocation);
+        document.querySelectorAll(".nav-item")
+            .forEach((ele) => ele.classList.remove("active"));
+
+        switch (currentLocation) {
+            case '/upload_file':
+                document.getElementById("file_upload").classList.add("active");
+                break;
+            default:
+                document.getElementById("index").classList.add("active");
+        }
+    }
+</script>
 </html>

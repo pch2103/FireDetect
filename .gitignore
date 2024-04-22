@@ -2,4 +2,5 @@
 .env
 node_modules
 venv
+uploads
 __pycache__
