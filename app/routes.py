@@ -118,8 +118,6 @@ def file():
     if 'play_video' in request.args:
         play_video = request.args['play_video']
 
-    flash('Files3 - {}'.format(session['camera']))
-
     return render_template('upload_file.html', title='Видео из файла', header=header,
                            message=message, play_video=play_video)
 
@@ -132,7 +130,6 @@ def upload_file():
     upload_folder = os.path.join(os.path.dirname(__file__), 'static/' + app.config['UPLOAD_PATH'])
     filename = secure_filename(uploaded_file.filename)
 
-    flash('Files1 - {}'.format(filename))
     if filename != '':
         try:
             file_ext = os.path.splitext(filename)[1]
@@ -149,6 +146,6 @@ def upload_file():
     else:
         message = 'Не выбран файл'
 
-    flash('Files2 - {}'.format(session['camera']))
+    # flash('Files2 - {}'.format(session['camera']))
 
     return redirect(url_for('file', message=message, play_video=play_video))
